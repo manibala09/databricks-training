@@ -28,8 +28,8 @@
 
 ## 📂 Files Included
 - `datacreation.sql` → Table creation scripts
-- `queries.sql` → SQL practice queries
-- `output.txt` → Query results and outputs
+- `solution_part1.sql, solution_part2.sql` → SQL practice queries
+
 
 ---
 
