@@ -1,87 +1,47 @@
-# SQL Practice – Databricks
+# Week 1 - Day 1
 
-## Overview
-
-This repository contains SQL query practice for Databricks course.
-The focus is on understanding core SQL concepts through categorized topics.
-
----
-
-## Topics Covered
-
-### Basic Queries (5)
-
-* SELECT statements
-* Column selection
-* Filtering with WHERE
-* Table data retrieval
-* Subquery basics
+## 📖 Topics Learned
+- Introduction to SQL
+- `SELECT` statement
+- `WHERE` clause
+- `LIKE` operator
+- Aggregate functions (`SUM`, `AVG`, `MIN`)
+- `GROUP BY`
+- `ORDER BY`
+- Basic `JOIN`
 
 ---
 
-### String Matching Queries (5)
-
-* LIKE operator
-* Wildcards (% , _)
-* Pattern searching
-* Character positioning
-* String filtering
+## 🧪 Practice Work
+- Created tables using `datacreation.sql`
+- Inserted sample data into tables
+- Executed multiple SQL queries
+- Practiced filtering, sorting, grouping, and joins
 
 ---
 
-### Date Queries (5)
-
-* Date filtering
-* YEAR(), MONTH() functions
-* Date comparison
-* Range queries
-* Relative date calculations
+## 🛠️ Tools Used
+- DB Fiddle
+- GitHub
 
 ---
 
-### Aggregate Queries (5)
-
-* SUM()
-* AVG()
-* MIN()
-* COUNT()
-* Aggregate calculations
+## 📂 Files Included
+- `datacreation.sql` → Table creation scripts
+- `queries.sql` → SQL practice queries
+- `output.txt` → Query results and outputs
 
 ---
 
-### Group By Queries (5)
-
-* GROUP BY clause
-* Aggregation per group
-* Group-based calculations
-* MAX/MIN per group
-* Ranking groups
+## 📚 Source
+SQL practice questions based on training material using:
+- Employee table
+- Department table
+- Project table
 
 ---
 
-### Having Queries (5)
-
-* HAVING clause
-* Filtering grouped data
-* Aggregate conditions
-* Group filtering
-* Conditional aggregation
+## 🚀 Summary
+Today I learned how to create SQL tables, insert records, and perform various SQL operations such as filtering, aggregation, sorting, grouping, and joins. This practice helped me strengthen my understanding of fundamental SQL concepts.
 
 ---
-
-### Order By Queries (5)
-
-* ORDER BY clause
-* Ascending sorting
-* Descending sorting
-* Multi-column sorting
-* Sorting grouped data
-
----
-
-
-## Author
-
-#### Mani Bala Peethani
-B.Tech (AIML) Student
-
