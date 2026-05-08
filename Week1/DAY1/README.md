@@ -29,6 +29,7 @@
 ## 📂 Files Included
 - `datacreation.sql` → Table creation scripts
 - `solution_part1.sql, solution_part2.sql` → SQL practice queries
+-  `output.txt` → SQL practice queries output
 
 
 ---
