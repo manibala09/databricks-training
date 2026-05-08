@@ -1,4 +1,4 @@
-# Week 1 - Day 2 SQL Assignment
+# Day 2 SQL Assignment
 
 ## 📖 Topics Covered
 
