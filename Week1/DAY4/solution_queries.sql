@@ -321,7 +321,7 @@ from (
 where rank_num = 1;
 
 -- bonus challenge:
--- reate a report showing monthly sales trends using: CTEs Running totals LAG() Percentage growth calculations
+-- 31.create a report showing monthly sales trends using: CTEs Running totals LAG() Percentage growth calculations
 
 with monthly_sales as (
     select date_format(order_date, '%y-%m') as month,
