@@ -1,0 +1,1171 @@
+**Schema (MySQL v5.7)**
+
+    CREATE TABLE regex_practice (
+    id INT,
+    full_text VARCHAR(200),
+    email VARCHAR(100),
+    phone VARCHAR(30),
+    mixed_value VARCHAR(100)
+    );
+    
+    INSERT INTO regex_practice VALUES
+    (1,'EMP001_IN_91','karthik@gmail.com','+91-9876543210','abc123xyz'),
+    (2,'EMP002_US_01','rahul@yahoo.com','+1-7654321098','test45done'),
+    (3,'EMP003_UK_44','john@outlook.com','+44-9988776655','run9fast'),
+    (4,'EMP004_AU_61','steve@gmail.com','+61-8899776655','go88home'),
+    (5,'EMP005_IN_91','arjun@company.in','+91-7788996655','data77lake'),
+    (6,'EMP006_US_01','meera@gmail.com','+1-9090909090','spark12sql'),
+    (7,'EMP007_UK_44','rohan@yahoo.com','+44-7878787878','etl999job'),
+    (8,'EMP008_AU_61','alice@company.au','+61-6665554443','cloud7aws'),
+    (9,'EMP009_IN_91','vinay@gmail.com','+91-9988776655','hdfs34node'),
+    (10,'EMP010_US_01','sam@outlook.com','+1-6767676767','map5reduce'),
+    (11,'USR11_IN','neha@gmail.com','91-8899001122','abc1'),
+    (12,'USR12_US','tom@yahoo.com','01-9988776655','x9'),
+    (13,'USR13_UK','harry@company.co.uk','44-6677889900','z88'),
+    (14,'USR14_AU','olivia@gmail.com','61-4455667788','q777'),
+    (15,'USR15_IN','ankit@company.in','91-9988001122','karthik99'),
+    (16,'ACC_1001_91','user1@gmail.com','+91-8877665544','etl1'),
+    (17,'ACC_1002_01','user2@yahoo.com','+1-2233445566','etl22'),
+    (18,'ACC_1003_44','user3@outlook.com','+44-3344556677','etl333'),
+    (19,'ACC_1004_61','user4@gmail.com','+61-5566778899','etl4444'),
+    (20,'ACC_1005_91','user5@company.in','+91-6677889900','etl55555'),
+    (21,'ORD-11-IN','a@gmail.com','91-9998887776','a1b2'),
+    (22,'ORD-22-US','b@yahoo.com','01-1112223334','x2y'),
+    (23,'ORD-33-UK','c@outlook.com','44-5556667778','m33n'),
+    (24,'ORD-44-AU','d@gmail.com','61-8887776665','k444'),
+    (25,'ORD-55-IN','e@company.in','91-4445556667','job5'),
+    (26,'LOG91DATA','x@gmail.com','91-9090909090','log99'),
+    (27,'LOG01DATA','y@yahoo.com','01-8080808080','log8'),
+    (28,'LOG44DATA','z@outlook.com','44-7070707070','log777'),
+    (29,'LOG61DATA','p@gmail.com','61-6060606060','log6666'),
+    (30,'LOG91DATA','q@company.in','91-5050505050','log55555'),
+    (31,'IND91CODE','aa@gmail.com','+91-8889990001','aa1'),
+    (32,'USA01CODE','bb@yahoo.com','+1-7776665554','bb22'),
+    (33,'UK44CODE','cc@outlook.com','+44-6665554443','cc333'),
+    (34,'AUS61CODE','dd@gmail.com','+61-5554443332','dd4444'),
+    (35,'IND91CODE','ee@company.in','+91-4443332221','ee55555'),
+    (36,'TEST001','test1@gmail.com','91-1111111111','t1'),
+    (37,'TEST002','test2@yahoo.com','01-2222222222','t22'),
+    (38,'TEST003','test3@outlook.com','44-3333333333','t333'),
+    (39,'TEST004','test4@gmail.com','61-4444444444','t4444'),
+    (40,'TEST005','test5@company.in','91-5555555555','t55555');
+
+---
+
+**Query #1**
+
+    -- Q1
+    -- From the column mixed_value, extract the numeric characters
+    -- that appear at the very beginning of the value.
+    
+    SELECT mixed_value,
+    CASE
+    WHEN mixed_value REGEXP '^[0-9]'
+    THEN SUBSTRING(mixed_value,1,
+    LOCATE(
+    SUBSTRING(mixed_value,
+    LENGTH(SUBSTRING_INDEX(mixed_value,'0',1))+1,1),
+    mixed_value)-1)
+    ELSE NULL
+    END AS beginning_numbers
+    FROM regex_practice;
+
+| mixed_value | beginning_numbers |
+| ----------- | ----------------- |
+| abc123xyz   |                   |
+| test45done  |                   |
+| run9fast    |                   |
+| go88home    |                   |
+| data77lake  |                   |
+| spark12sql  |                   |
+| etl999job   |                   |
+| cloud7aws   |                   |
+| hdfs34node  |                   |
+| map5reduce  |                   |
+| abc1        |                   |
+| x9          |                   |
+| z88         |                   |
+| q777        |                   |
+| karthik99   |                   |
+| etl1        |                   |
+| etl22       |                   |
+| etl333      |                   |
+| etl4444     |                   |
+| etl55555    |                   |
+| a1b2        |                   |
+| x2y         |                   |
+| m33n        |                   |
+| k444        |                   |
+| job5        |                   |
+| log99       |                   |
+| log8        |                   |
+| log777      |                   |
+| log6666     |                   |
+| log55555    |                   |
+| aa1         |                   |
+| bb22        |                   |
+| cc333       |                   |
+| dd4444      |                   |
+| ee55555     |                   |
+| t1          |                   |
+| t22         |                   |
+| t333        |                   |
+| t4444       |                   |
+| t55555      |                   |
+
+---
+**Query #2**
+
+    -- Q2
+    -- From the column mixed_value, extract the numeric characters
+    -- that appear at the very end of the value.
+    
+    SELECT mixed_value,
+    RIGHT(mixed_value,
+    LENGTH(mixed_value) -
+    LENGTH(TRIM(TRAILING '0123456789' FROM mixed_value))
+    ) AS ending_numbers
+    FROM regex_practice;
+
+| mixed_value | ending_numbers |
+| ----------- | -------------- |
+| abc123xyz   |                |
+| test45done  |                |
+| run9fast    |                |
+| go88home    |                |
+| data77lake  |                |
+| spark12sql  |                |
+| etl999job   |                |
+| cloud7aws   |                |
+| hdfs34node  |                |
+| map5reduce  |                |
+| abc1        |                |
+| x9          |                |
+| z88         |                |
+| q777        |                |
+| karthik99   |                |
+| etl1        |                |
+| etl22       |                |
+| etl333      |                |
+| etl4444     |                |
+| etl55555    |                |
+| a1b2        |                |
+| x2y         |                |
+| m33n        |                |
+| k444        |                |
+| job5        |                |
+| log99       |                |
+| log8        |                |
+| log777      |                |
+| log6666     |                |
+| log55555    |                |
+| aa1         |                |
+| bb22        |                |
+| cc333       |                |
+| dd4444      |                |
+| ee55555     |                |
+| t1          |                |
+| t22         |                |
+| t333        |                |
+| t4444       |                |
+| t55555      |                |
+
+---
+**Query #3**
+
+    -- Q3
+    -- From the column mixed_value, extract only the first single character.
+    
+    SELECT mixed_value,
+    LEFT(mixed_value,1) AS first_character
+    FROM regex_practice;
+
+| mixed_value | first_character |
+| ----------- | --------------- |
+| abc123xyz   | a               |
+| test45done  | t               |
+| run9fast    | r               |
+| go88home    | g               |
+| data77lake  | d               |
+| spark12sql  | s               |
+| etl999job   | e               |
+| cloud7aws   | c               |
+| hdfs34node  | h               |
+| map5reduce  | m               |
+| abc1        | a               |
+| x9          | x               |
+| z88         | z               |
+| q777        | q               |
+| karthik99   | k               |
+| etl1        | e               |
+| etl22       | e               |
+| etl333      | e               |
+| etl4444     | e               |
+| etl55555    | e               |
+| a1b2        | a               |
+| x2y         | x               |
+| m33n        | m               |
+| k444        | k               |
+| job5        | j               |
+| log99       | l               |
+| log8        | l               |
+| log777      | l               |
+| log6666     | l               |
+| log55555    | l               |
+| aa1         | a               |
+| bb22        | b               |
+| cc333       | c               |
+| dd4444      | d               |
+| ee55555     | e               |
+| t1          | t               |
+| t22         | t               |
+| t333        | t               |
+| t4444       | t               |
+| t55555      | t               |
+
+---
+**Query #4**
+
+    -- Q4
+    -- From the column mixed_value, extract only the last single character.
+    
+    SELECT mixed_value,
+    RIGHT(mixed_value,1) AS last_character
+    FROM regex_practice;
+
+| mixed_value | last_character |
+| ----------- | -------------- |
+| abc123xyz   | z              |
+| test45done  | e              |
+| run9fast    | t              |
+| go88home    | e              |
+| data77lake  | e              |
+| spark12sql  | l              |
+| etl999job   | b              |
+| cloud7aws   | s              |
+| hdfs34node  | e              |
+| map5reduce  | e              |
+| abc1        | 1              |
+| x9          | 9              |
+| z88         | 8              |
+| q777        | 7              |
+| karthik99   | 9              |
+| etl1        | 1              |
+| etl22       | 2              |
+| etl333      | 3              |
+| etl4444     | 4              |
+| etl55555    | 5              |
+| a1b2        | 2              |
+| x2y         | y              |
+| m33n        | n              |
+| k444        | 4              |
+| job5        | 5              |
+| log99       | 9              |
+| log8        | 8              |
+| log777      | 7              |
+| log6666     | 6              |
+| log55555    | 5              |
+| aa1         | 1              |
+| bb22        | 2              |
+| cc333       | 3              |
+| dd4444      | 4              |
+| ee55555     | 5              |
+| t1          | 1              |
+| t22         | 2              |
+| t333        | 3              |
+| t4444       | 4              |
+| t55555      | 5              |
+
+---
+**Query #5**
+
+    -- Q5
+    -- From the column mixed_value, extract exactly two consecutive numeric characters.
+    
+    SELECT mixed_value,
+    SUBSTRING(mixed_value,
+    LOCATE('1',mixed_value),2) AS two_digits
+    FROM regex_practice;
+
+| mixed_value | two_digits |
+| ----------- | ---------- |
+| abc123xyz   | 12         |
+| test45done  |            |
+| run9fast    |            |
+| go88home    |            |
+| data77lake  |            |
+| spark12sql  | 12         |
+| etl999job   |            |
+| cloud7aws   |            |
+| hdfs34node  |            |
+| map5reduce  |            |
+| abc1        | 1          |
+| x9          |            |
+| z88         |            |
+| q777        |            |
+| karthik99   |            |
+| etl1        | 1          |
+| etl22       |            |
+| etl333      |            |
+| etl4444     |            |
+| etl55555    |            |
+| a1b2        | 1b         |
+| x2y         |            |
+| m33n        |            |
+| k444        |            |
+| job5        |            |
+| log99       |            |
+| log8        |            |
+| log777      |            |
+| log6666     |            |
+| log55555    |            |
+| aa1         | 1          |
+| bb22        |            |
+| cc333       |            |
+| dd4444      |            |
+| ee55555     |            |
+| t1          | 1          |
+| t22         |            |
+| t333        |            |
+| t4444       |            |
+| t55555      |            |
+
+---
+**Query #6**
+
+    -- Q6
+    -- From the column mixed_value, extract exactly one numeric character.
+    
+    SELECT mixed_value,
+    SUBSTRING(mixed_value,
+    LENGTH(SUBSTRING_INDEX(mixed_value,'1',1))+1,1) AS one_digit
+    FROM regex_practice;
+
+| mixed_value | one_digit |
+| ----------- | --------- |
+| abc123xyz   | 1         |
+| test45done  |           |
+| run9fast    |           |
+| go88home    |           |
+| data77lake  |           |
+| spark12sql  | 1         |
+| etl999job   |           |
+| cloud7aws   |           |
+| hdfs34node  |           |
+| map5reduce  |           |
+| abc1        | 1         |
+| x9          |           |
+| z88         |           |
+| q777        |           |
+| karthik99   |           |
+| etl1        | 1         |
+| etl22       |           |
+| etl333      |           |
+| etl4444     |           |
+| etl55555    |           |
+| a1b2        | 1         |
+| x2y         |           |
+| m33n        |           |
+| k444        |           |
+| job5        |           |
+| log99       |           |
+| log8        |           |
+| log777      |           |
+| log6666     |           |
+| log55555    |           |
+| aa1         | 1         |
+| bb22        |           |
+| cc333       |           |
+| dd4444      |           |
+| ee55555     |           |
+| t1          | 1         |
+| t22         |           |
+| t333        |           |
+| t4444       |           |
+| t55555      |           |
+
+---
+**Query #7**
+
+    -- Q7
+    -- From the column phone, extract the country code present
+    -- at the beginning of the phone number.
+    
+    SELECT phone,
+    SUBSTRING_INDEX(REPLACE(phone,'+',''),'-',1) AS country_code
+    FROM regex_practice;
+
+| phone          | country_code |
+| -------------- | ------------ |
+| +91-9876543210 | 91           |
+| +1-7654321098  | 1            |
+| +44-9988776655 | 44           |
+| +61-8899776655 | 61           |
+| +91-7788996655 | 91           |
+| +1-9090909090  | 1            |
+| +44-7878787878 | 44           |
+| +61-6665554443 | 61           |
+| +91-9988776655 | 91           |
+| +1-6767676767  | 1            |
+| 91-8899001122  | 91           |
+| 01-9988776655  | 01           |
+| 44-6677889900  | 44           |
+| 61-4455667788  | 61           |
+| 91-9988001122  | 91           |
+| +91-8877665544 | 91           |
+| +1-2233445566  | 1            |
+| +44-3344556677 | 44           |
+| +61-5566778899 | 61           |
+| +91-6677889900 | 91           |
+| 91-9998887776  | 91           |
+| 01-1112223334  | 01           |
+| 44-5556667778  | 44           |
+| 61-8887776665  | 61           |
+| 91-4445556667  | 91           |
+| 91-9090909090  | 91           |
+| 01-8080808080  | 01           |
+| 44-7070707070  | 44           |
+| 61-6060606060  | 61           |
+| 91-5050505050  | 91           |
+| +91-8889990001 | 91           |
+| +1-7776665554  | 1            |
+| +44-6665554443 | 44           |
+| +61-5554443332 | 61           |
+| +91-4443332221 | 91           |
+| 91-1111111111  | 91           |
+| 01-2222222222  | 01           |
+| 44-3333333333  | 44           |
+| 61-4444444444  | 61           |
+| 91-5555555555  | 91           |
+
+---
+**Query #8**
+
+    -- Q8
+    -- From the column mixed_value, extract the numeric portion
+    -- present between alphabetic characters.
+    
+    SELECT mixed_value,
+    REPLACE(
+    REPLACE(
+    REPLACE(
+    REPLACE(
+    REPLACE(
+    REPLACE(
+    REPLACE(
+    REPLACE(
+    REPLACE(
+    REPLACE(mixed_value,
+    'a',''),'b',''),'c',''),'d',''),'e',''),
+    'f',''),'g',''),'h',''),'i',''),'j','')
+    AS middle_numbers
+    FROM regex_practice;
+
+| mixed_value | middle_numbers |
+| ----------- | -------------- |
+| abc123xyz   | 123xyz         |
+| test45done  | tst45on        |
+| run9fast    | run9st         |
+| go88home    | o88om          |
+| data77lake  | t77lk          |
+| spark12sql  | sprk12sql      |
+| etl999job   | tl999o         |
+| cloud7aws   | lou7ws         |
+| hdfs34node  | s34no          |
+| map5reduce  | mp5ru          |
+| abc1        | 1              |
+| x9          | x9             |
+| z88         | z88            |
+| q777        | q777           |
+| karthik99   | krtk99         |
+| etl1        | tl1            |
+| etl22       | tl22           |
+| etl333      | tl333          |
+| etl4444     | tl4444         |
+| etl55555    | tl55555        |
+| a1b2        | 12             |
+| x2y         | x2y            |
+| m33n        | m33n           |
+| k444        | k444           |
+| job5        | o5             |
+| log99       | lo99           |
+| log8        | lo8            |
+| log777      | lo777          |
+| log6666     | lo6666         |
+| log55555    | lo55555        |
+| aa1         | 1              |
+| bb22        | 22             |
+| cc333       | 333            |
+| dd4444      | 4444           |
+| ee55555     | 55555          |
+| t1          | t1             |
+| t22         | t22            |
+| t333        | t333           |
+| t4444       | t4444          |
+| t55555      | t55555         |
+
+---
+**Query #9**
+
+    -- Q9
+    -- From the column email, extract the text before the @ symbol.
+    
+    SELECT email,
+    SUBSTRING_INDEX(email,'@',1) AS username
+    FROM regex_practice;
+
+| email               | username |
+| ------------------- | -------- |
+| karthik@gmail.com   | karthik  |
+| rahul@yahoo.com     | rahul    |
+| john@outlook.com    | john     |
+| steve@gmail.com     | steve    |
+| arjun@company.in    | arjun    |
+| meera@gmail.com     | meera    |
+| rohan@yahoo.com     | rohan    |
+| alice@company.au    | alice    |
+| vinay@gmail.com     | vinay    |
+| sam@outlook.com     | sam      |
+| neha@gmail.com      | neha     |
+| tom@yahoo.com       | tom      |
+| harry@company.co.uk | harry    |
+| olivia@gmail.com    | olivia   |
+| ankit@company.in    | ankit    |
+| user1@gmail.com     | user1    |
+| user2@yahoo.com     | user2    |
+| user3@outlook.com   | user3    |
+| user4@gmail.com     | user4    |
+| user5@company.in    | user5    |
+| a@gmail.com         | a        |
+| b@yahoo.com         | b        |
+| c@outlook.com       | c        |
+| d@gmail.com         | d        |
+| e@company.in        | e        |
+| x@gmail.com         | x        |
+| y@yahoo.com         | y        |
+| z@outlook.com       | z        |
+| p@gmail.com         | p        |
+| q@company.in        | q        |
+| aa@gmail.com        | aa       |
+| bb@yahoo.com        | bb       |
+| cc@outlook.com      | cc       |
+| dd@gmail.com        | dd       |
+| ee@company.in       | ee       |
+| test1@gmail.com     | test1    |
+| test2@yahoo.com     | test2    |
+| test3@outlook.com   | test3    |
+| test4@gmail.com     | test4    |
+| test5@company.in    | test5    |
+
+---
+**Query #10**
+
+    -- Q10
+    -- From the column email, extract the text after the @ symbol
+    -- including the domain name.
+    
+    SELECT email,
+    SUBSTRING_INDEX(email,'@',-1) AS domain_text
+    FROM regex_practice;
+
+| email               | domain_text   |
+| ------------------- | ------------- |
+| karthik@gmail.com   | gmail.com     |
+| rahul@yahoo.com     | yahoo.com     |
+| john@outlook.com    | outlook.com   |
+| steve@gmail.com     | gmail.com     |
+| arjun@company.in    | company.in    |
+| meera@gmail.com     | gmail.com     |
+| rohan@yahoo.com     | yahoo.com     |
+| alice@company.au    | company.au    |
+| vinay@gmail.com     | gmail.com     |
+| sam@outlook.com     | outlook.com   |
+| neha@gmail.com      | gmail.com     |
+| tom@yahoo.com       | yahoo.com     |
+| harry@company.co.uk | company.co.uk |
+| olivia@gmail.com    | gmail.com     |
+| ankit@company.in    | company.in    |
+| user1@gmail.com     | gmail.com     |
+| user2@yahoo.com     | yahoo.com     |
+| user3@outlook.com   | outlook.com   |
+| user4@gmail.com     | gmail.com     |
+| user5@company.in    | company.in    |
+| a@gmail.com         | gmail.com     |
+| b@yahoo.com         | yahoo.com     |
+| c@outlook.com       | outlook.com   |
+| d@gmail.com         | gmail.com     |
+| e@company.in        | company.in    |
+| x@gmail.com         | gmail.com     |
+| y@yahoo.com         | yahoo.com     |
+| z@outlook.com       | outlook.com   |
+| p@gmail.com         | gmail.com     |
+| q@company.in        | company.in    |
+| aa@gmail.com        | gmail.com     |
+| bb@yahoo.com        | yahoo.com     |
+| cc@outlook.com      | outlook.com   |
+| dd@gmail.com        | gmail.com     |
+| ee@company.in       | company.in    |
+| test1@gmail.com     | gmail.com     |
+| test2@yahoo.com     | yahoo.com     |
+| test3@outlook.com   | outlook.com   |
+| test4@gmail.com     | gmail.com     |
+| test5@company.in    | company.in    |
+
+---
+**Query #11**
+
+    -- Q11
+    -- From the column email, extract only the domain name
+    -- without including the @ symbol.
+    
+    SELECT email,
+    SUBSTRING_INDEX(email,'@',-1) AS domain_name
+    FROM regex_practice;
+
+| email               | domain_name   |
+| ------------------- | ------------- |
+| karthik@gmail.com   | gmail.com     |
+| rahul@yahoo.com     | yahoo.com     |
+| john@outlook.com    | outlook.com   |
+| steve@gmail.com     | gmail.com     |
+| arjun@company.in    | company.in    |
+| meera@gmail.com     | gmail.com     |
+| rohan@yahoo.com     | yahoo.com     |
+| alice@company.au    | company.au    |
+| vinay@gmail.com     | gmail.com     |
+| sam@outlook.com     | outlook.com   |
+| neha@gmail.com      | gmail.com     |
+| tom@yahoo.com       | yahoo.com     |
+| harry@company.co.uk | company.co.uk |
+| olivia@gmail.com    | gmail.com     |
+| ankit@company.in    | company.in    |
+| user1@gmail.com     | gmail.com     |
+| user2@yahoo.com     | yahoo.com     |
+| user3@outlook.com   | outlook.com   |
+| user4@gmail.com     | gmail.com     |
+| user5@company.in    | company.in    |
+| a@gmail.com         | gmail.com     |
+| b@yahoo.com         | yahoo.com     |
+| c@outlook.com       | outlook.com   |
+| d@gmail.com         | gmail.com     |
+| e@company.in        | company.in    |
+| x@gmail.com         | gmail.com     |
+| y@yahoo.com         | yahoo.com     |
+| z@outlook.com       | outlook.com   |
+| p@gmail.com         | gmail.com     |
+| q@company.in        | company.in    |
+| aa@gmail.com        | gmail.com     |
+| bb@yahoo.com        | yahoo.com     |
+| cc@outlook.com      | outlook.com   |
+| dd@gmail.com        | gmail.com     |
+| ee@company.in       | company.in    |
+| test1@gmail.com     | gmail.com     |
+| test2@yahoo.com     | yahoo.com     |
+| test3@outlook.com   | outlook.com   |
+| test4@gmail.com     | gmail.com     |
+| test5@company.in    | company.in    |
+
+---
+**Query #12**
+
+    -- Q12
+    -- From the column email, extract only the text that appears
+    -- after the last dot in the email address.
+    
+    SELECT email,
+    SUBSTRING_INDEX(email,'.',-1) AS extension
+    FROM regex_practice;
+
+| email               | extension |
+| ------------------- | --------- |
+| karthik@gmail.com   | com       |
+| rahul@yahoo.com     | com       |
+| john@outlook.com    | com       |
+| steve@gmail.com     | com       |
+| arjun@company.in    | in        |
+| meera@gmail.com     | com       |
+| rohan@yahoo.com     | com       |
+| alice@company.au    | au        |
+| vinay@gmail.com     | com       |
+| sam@outlook.com     | com       |
+| neha@gmail.com      | com       |
+| tom@yahoo.com       | com       |
+| harry@company.co.uk | uk        |
+| olivia@gmail.com    | com       |
+| ankit@company.in    | in        |
+| user1@gmail.com     | com       |
+| user2@yahoo.com     | com       |
+| user3@outlook.com   | com       |
+| user4@gmail.com     | com       |
+| user5@company.in    | in        |
+| a@gmail.com         | com       |
+| b@yahoo.com         | com       |
+| c@outlook.com       | com       |
+| d@gmail.com         | com       |
+| e@company.in        | in        |
+| x@gmail.com         | com       |
+| y@yahoo.com         | com       |
+| z@outlook.com       | com       |
+| p@gmail.com         | com       |
+| q@company.in        | in        |
+| aa@gmail.com        | com       |
+| bb@yahoo.com        | com       |
+| cc@outlook.com      | com       |
+| dd@gmail.com        | com       |
+| ee@company.in       | in        |
+| test1@gmail.com     | com       |
+| test2@yahoo.com     | com       |
+| test3@outlook.com   | com       |
+| test4@gmail.com     | com       |
+| test5@company.in    | in        |
+
+---
+**Query #13**
+
+    -- Q13
+    -- From the column mixed_value, extract only alphabetic characters
+    -- that appear together as a continuous sequence.
+    
+    SELECT mixed_value,
+    TRIM('0123456789' FROM mixed_value) AS alphabets
+    FROM regex_practice;
+
+| mixed_value | alphabets  |
+| ----------- | ---------- |
+| abc123xyz   | abc123xyz  |
+| test45done  | test45done |
+| run9fast    | run9fast   |
+| go88home    | go88home   |
+| data77lake  | data77lake |
+| spark12sql  | spark12sql |
+| etl999job   | etl999job  |
+| cloud7aws   | cloud7aws  |
+| hdfs34node  | hdfs34node |
+| map5reduce  | map5reduce |
+| abc1        | abc1       |
+| x9          | x9         |
+| z88         | z88        |
+| q777        | q777       |
+| karthik99   | karthik99  |
+| etl1        | etl1       |
+| etl22       | etl22      |
+| etl333      | etl333     |
+| etl4444     | etl4444    |
+| etl55555    | etl55555   |
+| a1b2        | a1b2       |
+| x2y         | x2y        |
+| m33n        | m33n       |
+| k444        | k444       |
+| job5        | job5       |
+| log99       | log99      |
+| log8        | log8       |
+| log777      | log777     |
+| log6666     | log6666    |
+| log55555    | log55555   |
+| aa1         | aa1        |
+| bb22        | bb22       |
+| cc333       | cc333      |
+| dd4444      | dd4444     |
+| ee55555     | ee55555    |
+| t1          | t1         |
+| t22         | t22        |
+| t333        | t333       |
+| t4444       | t4444      |
+| t55555      | t55555     |
+
+---
+**Query #14**
+
+    -- Q14
+    -- From the column mixed_value, extract only numeric characters
+    -- that appear together as a continuous sequence.
+    
+    SELECT mixed_value,
+    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+    REPLACE(mixed_value,
+    'a',''),'b',''),'c',''),'d',''),'e',''),
+    'f',''),'g',''),'h',''),'i',''),'j',''),
+    'k',''),'l',''),'m',''),'n',''),'o',''),
+    'p',''),'q',''),'r',''),'s',''),'t',''),
+    'u',''),'v',''),'w',''),'x',''),'y',''),
+    'z','') AS numbers
+    FROM regex_practice;
+
+| mixed_value | numbers |
+| ----------- | ------- |
+| abc123xyz   | 123     |
+| test45done  | 45      |
+| run9fast    | 9       |
+| go88home    | 88      |
+| data77lake  | 77      |
+| spark12sql  | 12      |
+| etl999job   | 999     |
+| cloud7aws   | 7       |
+| hdfs34node  | 34      |
+| map5reduce  | 5       |
+| abc1        | 1       |
+| x9          | 9       |
+| z88         | 88      |
+| q777        | 777     |
+| karthik99   | 99      |
+| etl1        | 1       |
+| etl22       | 22      |
+| etl333      | 333     |
+| etl4444     | 4444    |
+| etl55555    | 55555   |
+| a1b2        | 12      |
+| x2y         | 2       |
+| m33n        | 33      |
+| k444        | 444     |
+| job5        | 5       |
+| log99       | 99      |
+| log8        | 8       |
+| log777      | 777     |
+| log6666     | 6666    |
+| log55555    | 55555   |
+| aa1         | 1       |
+| bb22        | 22      |
+| cc333       | 333     |
+| dd4444      | 4444    |
+| ee55555     | 55555   |
+| t1          | 1       |
+| t22         | 22      |
+| t333        | 333     |
+| t4444       | 4444    |
+| t55555      | 55555   |
+
+---
+**Query #15**
+
+    -- Q15
+    -- From the column full_text, extract exactly the first three characters.
+    
+    SELECT full_text,
+    LEFT(full_text,3) AS first_three_characters
+    FROM regex_practice;
+
+| full_text    | first_three_characters |
+| ------------ | ---------------------- |
+| EMP001_IN_91 | EMP                    |
+| EMP002_US_01 | EMP                    |
+| EMP003_UK_44 | EMP                    |
+| EMP004_AU_61 | EMP                    |
+| EMP005_IN_91 | EMP                    |
+| EMP006_US_01 | EMP                    |
+| EMP007_UK_44 | EMP                    |
+| EMP008_AU_61 | EMP                    |
+| EMP009_IN_91 | EMP                    |
+| EMP010_US_01 | EMP                    |
+| USR11_IN     | USR                    |
+| USR12_US     | USR                    |
+| USR13_UK     | USR                    |
+| USR14_AU     | USR                    |
+| USR15_IN     | USR                    |
+| ACC_1001_91  | ACC                    |
+| ACC_1002_01  | ACC                    |
+| ACC_1003_44  | ACC                    |
+| ACC_1004_61  | ACC                    |
+| ACC_1005_91  | ACC                    |
+| ORD-11-IN    | ORD                    |
+| ORD-22-US    | ORD                    |
+| ORD-33-UK    | ORD                    |
+| ORD-44-AU    | ORD                    |
+| ORD-55-IN    | ORD                    |
+| LOG91DATA    | LOG                    |
+| LOG01DATA    | LOG                    |
+| LOG44DATA    | LOG                    |
+| LOG61DATA    | LOG                    |
+| LOG91DATA    | LOG                    |
+| IND91CODE    | IND                    |
+| USA01CODE    | USA                    |
+| UK44CODE     | UK4                    |
+| AUS61CODE    | AUS                    |
+| IND91CODE    | IND                    |
+| TEST001      | TES                    |
+| TEST002      | TES                    |
+| TEST003      | TES                    |
+| TEST004      | TES                    |
+| TEST005      | TES                    |
+
+---
+**Query #16**
+
+    -- Q16
+    -- From the column full_text, extract exactly the last two characters.
+    
+    SELECT full_text,
+    RIGHT(full_text,2) AS last_two_characters
+    FROM regex_practice;
+
+| full_text    | last_two_characters |
+| ------------ | ------------------- |
+| EMP001_IN_91 | 91                  |
+| EMP002_US_01 | 01                  |
+| EMP003_UK_44 | 44                  |
+| EMP004_AU_61 | 61                  |
+| EMP005_IN_91 | 91                  |
+| EMP006_US_01 | 01                  |
+| EMP007_UK_44 | 44                  |
+| EMP008_AU_61 | 61                  |
+| EMP009_IN_91 | 91                  |
+| EMP010_US_01 | 01                  |
+| USR11_IN     | IN                  |
+| USR12_US     | US                  |
+| USR13_UK     | UK                  |
+| USR14_AU     | AU                  |
+| USR15_IN     | IN                  |
+| ACC_1001_91  | 91                  |
+| ACC_1002_01  | 01                  |
+| ACC_1003_44  | 44                  |
+| ACC_1004_61  | 61                  |
+| ACC_1005_91  | 91                  |
+| ORD-11-IN    | IN                  |
+| ORD-22-US    | US                  |
+| ORD-33-UK    | UK                  |
+| ORD-44-AU    | AU                  |
+| ORD-55-IN    | IN                  |
+| LOG91DATA    | TA                  |
+| LOG01DATA    | TA                  |
+| LOG44DATA    | TA                  |
+| LOG61DATA    | TA                  |
+| LOG91DATA    | TA                  |
+| IND91CODE    | DE                  |
+| USA01CODE    | DE                  |
+| UK44CODE     | DE                  |
+| AUS61CODE    | DE                  |
+| IND91CODE    | DE                  |
+| TEST001      | 01                  |
+| TEST002      | 02                  |
+| TEST003      | 03                  |
+| TEST004      | 04                  |
+| TEST005      | 05                  |
+
+---
+**Query #17**
+
+    -- Q17
+    -- From the column full_text, extract the employee number portion
+    -- that appears between the alphabetic prefix and the first underscore.
+    
+    SELECT full_text,
+    SUBSTRING_INDEX(
+    SUBSTRING_INDEX(full_text,'_',1),
+    'P',-1) AS employee_number
+    FROM regex_practice;
+
+| full_text    | employee_number |
+| ------------ | --------------- |
+| EMP001_IN_91 | 001             |
+| EMP002_US_01 | 002             |
+| EMP003_UK_44 | 003             |
+| EMP004_AU_61 | 004             |
+| EMP005_IN_91 | 005             |
+| EMP006_US_01 | 006             |
+| EMP007_UK_44 | 007             |
+| EMP008_AU_61 | 008             |
+| EMP009_IN_91 | 009             |
+| EMP010_US_01 | 010             |
+| USR11_IN     | USR11           |
+| USR12_US     | USR12           |
+| USR13_UK     | USR13           |
+| USR14_AU     | USR14           |
+| USR15_IN     | USR15           |
+| ACC_1001_91  | ACC             |
+| ACC_1002_01  | ACC             |
+| ACC_1003_44  | ACC             |
+| ACC_1004_61  | ACC             |
+| ACC_1005_91  | ACC             |
+| ORD-11-IN    | ORD-11-IN       |
+| ORD-22-US    | ORD-22-US       |
+| ORD-33-UK    | ORD-33-UK       |
+| ORD-44-AU    | ORD-44-AU       |
+| ORD-55-IN    | ORD-55-IN       |
+| LOG91DATA    | LOG91DATA       |
+| LOG01DATA    | LOG01DATA       |
+| LOG44DATA    | LOG44DATA       |
+| LOG61DATA    | LOG61DATA       |
+| LOG91DATA    | LOG91DATA       |
+| IND91CODE    | IND91CODE       |
+| USA01CODE    | USA01CODE       |
+| UK44CODE     | UK44CODE        |
+| AUS61CODE    | AUS61CODE       |
+| IND91CODE    | IND91CODE       |
+| TEST001      | TEST001         |
+| TEST002      | TEST002         |
+| TEST003      | TEST003         |
+| TEST004      | TEST004         |
+| TEST005      | TEST005         |
+
+---
+**Query #18**
+
+    -- Q18
+    -- From the column full_text, extract the country code
+    -- that appears at the end of the value.
+    
+    SELECT full_text,
+    RIGHT(full_text,2) AS ending_country_code
+    FROM regex_practice;
+
+| full_text    | ending_country_code |
+| ------------ | ------------------- |
+| EMP001_IN_91 | 91                  |
+| EMP002_US_01 | 01                  |
+| EMP003_UK_44 | 44                  |
+| EMP004_AU_61 | 61                  |
+| EMP005_IN_91 | 91                  |
+| EMP006_US_01 | 01                  |
+| EMP007_UK_44 | 44                  |
+| EMP008_AU_61 | 61                  |
+| EMP009_IN_91 | 91                  |
+| EMP010_US_01 | 01                  |
+| USR11_IN     | IN                  |
+| USR12_US     | US                  |
+| USR13_UK     | UK                  |
+| USR14_AU     | AU                  |
+| USR15_IN     | IN                  |
+| ACC_1001_91  | 91                  |
+| ACC_1002_01  | 01                  |
+| ACC_1003_44  | 44                  |
+| ACC_1004_61  | 61                  |
+| ACC_1005_91  | 91                  |
+| ORD-11-IN    | IN                  |
+| ORD-22-US    | US                  |
+| ORD-33-UK    | UK                  |
+| ORD-44-AU    | AU                  |
+| ORD-55-IN    | IN                  |
+| LOG91DATA    | TA                  |
+| LOG01DATA    | TA                  |
+| LOG44DATA    | TA                  |
+| LOG61DATA    | TA                  |
+| LOG91DATA    | TA                  |
+| IND91CODE    | DE                  |
+| USA01CODE    | DE                  |
+| UK44CODE     | DE                  |
+| AUS61CODE    | DE                  |
+| IND91CODE    | DE                  |
+| TEST001      | 01                  |
+| TEST002      | 02                  |
+| TEST003      | 03                  |
+| TEST004      | 04                  |
+| TEST005      | 05                  |
+
+---
+**Query #19**
+
+    -- Q19
+    -- From the column full_text, extract the alphabetic text
+    -- that appears between two underscore characters.
+    
+    SELECT full_text,
+    SUBSTRING_INDEX(
+    SUBSTRING_INDEX(full_text,'_',2),
+    '_',-1) AS middle_text
+    FROM regex_practice;
+
+| full_text    | middle_text |
+| ------------ | ----------- |
+| EMP001_IN_91 | IN          |
+| EMP002_US_01 | US          |
+| EMP003_UK_44 | UK          |
+| EMP004_AU_61 | AU          |
+| EMP005_IN_91 | IN          |
+| EMP006_US_01 | US          |
+| EMP007_UK_44 | UK          |
+| EMP008_AU_61 | AU          |
+| EMP009_IN_91 | IN          |
+| EMP010_US_01 | US          |
+| USR11_IN     | IN          |
+| USR12_US     | US          |
+| USR13_UK     | UK          |
+| USR14_AU     | AU          |
+| USR15_IN     | IN          |
+| ACC_1001_91  | 1001        |
+| ACC_1002_01  | 1002        |
+| ACC_1003_44  | 1003        |
+| ACC_1004_61  | 1004        |
+| ACC_1005_91  | 1005        |
+| ORD-11-IN    | ORD-11-IN   |
+| ORD-22-US    | ORD-22-US   |
+| ORD-33-UK    | ORD-33-UK   |
+| ORD-44-AU    | ORD-44-AU   |
+| ORD-55-IN    | ORD-55-IN   |
+| LOG91DATA    | LOG91DATA   |
+| LOG01DATA    | LOG01DATA   |
+| LOG44DATA    | LOG44DATA   |
+| LOG61DATA    | LOG61DATA   |
+| LOG91DATA    | LOG91DATA   |
+| IND91CODE    | IND91CODE   |
+| USA01CODE    | USA01CODE   |
+| UK44CODE     | UK44CODE    |
+| AUS61CODE    | AUS61CODE   |
+| IND91CODE    | IND91CODE   |
+| TEST001      | TEST001     |
+| TEST002      | TEST002     |
+| TEST003      | TEST003     |
+| TEST004      | TEST004     |
+| TEST005      | TEST005     |
+
+---
+**Query #20**
+
+    -- Q20
+    -- From the column phone, extract the numeric characters
+    -- immediately after the plus sign.
+    
+    SELECT phone,
+    SUBSTRING_INDEX(
+    SUBSTRING_INDEX(phone,'-',1),
+    '+',-1) AS plus_country_code
+    FROM regex_practice;
+
+| phone          | plus_country_code |
+| -------------- | ----------------- |
+| +91-9876543210 | 91                |
+| +1-7654321098  | 1                 |
+| +44-9988776655 | 44                |
+| +61-8899776655 | 61                |
+| +91-7788996655 | 91                |
+| +1-9090909090  | 1                 |
+| +44-7878787878 | 44                |
+| +61-6665554443 | 61                |
+| +91-9988776655 | 91                |
+| +1-6767676767  | 1                 |
+| 91-8899001122  | 91                |
+| 01-9988776655  | 01                |
+| 44-6677889900  | 44                |
+| 61-4455667788  | 61                |
+| 91-9988001122  | 91                |
+| +91-8877665544 | 91                |
+| +1-2233445566  | 1                 |
+| +44-3344556677 | 44                |
+| +61-5566778899 | 61                |
+| +91-6677889900 | 91                |
+| 91-9998887776  | 91                |
+| 01-1112223334  | 01                |
+| 44-5556667778  | 44                |
+| 61-8887776665  | 61                |
+| 91-4445556667  | 91                |
+| 91-9090909090  | 91                |
+| 01-8080808080  | 01                |
+| 44-7070707070  | 44                |
+| 61-6060606060  | 61                |
+| 91-5050505050  | 91                |
+| +91-8889990001 | 91                |
+| +1-7776665554  | 1                 |
+| +44-6665554443 | 44                |
+| +61-5554443332 | 61                |
+| +91-4443332221 | 91                |
+| 91-1111111111  | 91                |
+| 01-2222222222  | 01                |
+| 44-3333333333  | 44                |
+| 61-4444444444  | 61                |
+| 91-5555555555  | 91                |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/f/9mhqFfYV2ptq4KH5SpGEGn/22)
